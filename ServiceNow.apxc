@@ -1,13 +1,14 @@
 public class ServiceNow {
-    public static void getTickets(String TableName){
+    public void getTickets(String TableName,String incident,String UserName, String Password){
         Http http = new Http();
-		HttpRequest request = new HttpRequest();
-        String url = 'https://dev64765.service-now.com/api/now/table/' + TableName;
-		request.setEndpoint(url);
-		request.setMethod('GET');
-        String username = 'admin';
-        String password = 'Shubham123';
-		Blob headerValue = Blob.valueOf(username +':'+password);
+	HttpRequest request = new HttpRequest();
+        String url = 'https://'+incident;
+	url = url + '.service-now.com/api/now/table/' + TableName;
+	request.setEndpoint(url);
+	request.setMethod('GET');
+        String username = Username;
+        String password = Password;
+	Blob headerValue = Blob.valueOf(username +':'+password);
         String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
         request.setHeader('Authorization',authorizationHeader);
         HttpResponse response = http.send(request);
@@ -25,23 +26,27 @@ public class ServiceNow {
         }
 
 	}
-    public static void postTicket(String description){
-        Http http = new Http();
+    public void postTicket(String TableName,String incident,String UserName, String Password,String description){
+        	Http http = new Http();
 		HttpRequest request = new HttpRequest();
-		request.setEndpoint('https://dev64765.service-now.com/api/now/table/x_514301_shubhamap_shubhamtable');
+	        String url = 'https://'+incident;
+		url = url + '.service-now.com/api/now/table/' + TableName;
+		request.setEndpoint(url);
 		request.setMethod('POST');
-		Blob headerValue = Blob.valueOf('admin' +':'+'Shubham123');
+		String username = Username;
+	        String password = Password;
+		Blob headerValue = Blob.valueOf(username +':'+password);
 		String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
 		request.setHeader('Authorization',authorizationHeader);
 		request.setHeader('Content-Type', 'application/json;charset=UTF-8');
 		request.setBody('{"description":"shubham crated this"}');
 		HttpResponse response = http.send(request);
 		if (response.getStatusCode() == 201) {
-    		System.debug('Succesfuly Created a ticket with description = ');
+    			System.debug('Succesfuly Created a ticket with description = ');
 		}
 		else{
-            System.debug('Unable to Create a Ticket');
-    		System.debug(response.getStatusCode());
+            		System.debug('Unable to Create a Ticket');
+    			System.debug(response.getStatusCode());
 		}
     }
 }
