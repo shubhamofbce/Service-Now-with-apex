@@ -1,0 +1,47 @@
+public class ServiceNow {
+    public static void getTickets(String TableName){
+        Http http = new Http();
+		HttpRequest request = new HttpRequest();
+        String url = 'https://dev64765.service-now.com/api/now/table/' + TableName;
+		request.setEndpoint(url);
+		request.setMethod('GET');
+        String username = 'admin';
+        String password = 'Shubham123';
+		Blob headerValue = Blob.valueOf(username +':'+password);
+        String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
+        request.setHeader('Authorization',authorizationHeader);
+        HttpResponse response = http.send(request);
+        // If the request is successful, parse the JSON response.
+        if (response.getStatusCode() == 200) {
+        	Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+    		List<Object> tickets = (List<Object>) results.get('result');
+    		System.debug('Received the following tickets:');
+    		for (Object ticket: tickets) {
+        		System.debug(ticket);
+    		}
+    	}
+        else{
+            System.debug(response.getStatusCode());
+        }
+
+	}
+    public static void postTicket(String description){
+        Http http = new Http();
+		HttpRequest request = new HttpRequest();
+		request.setEndpoint('https://dev64765.service-now.com/api/now/table/x_514301_shubhamap_shubhamtable');
+		request.setMethod('POST');
+		Blob headerValue = Blob.valueOf('admin' +':'+'Shubham123');
+		String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
+		request.setHeader('Authorization',authorizationHeader);
+		request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+		request.setBody('{"description":"shubham crated this"}');
+		HttpResponse response = http.send(request);
+		if (response.getStatusCode() == 201) {
+    		System.debug('Succesfuly Created a ticket with description = ');
+		}
+		else{
+            System.debug('Unable to Create a Ticket');
+    		System.debug(response.getStatusCode());
+		}
+    }
+}
