@@ -1,40 +1,41 @@
 public class ServiceNow {
-    public void getTickets(String TableName,String incident,String UserName, String Password){
-        Http http = new Http();
+    public static HttpResponse getTickets(String TableName,String incident,String UserName, String Password){
+    Http http = new Http();
 	HttpRequest request = new HttpRequest();
-        String url = 'https://'+incident;
+    String url = 'https://'+incident;
 	url = url + '.service-now.com/api/now/table/' + TableName;
 	request.setEndpoint(url);
 	request.setMethod('GET');
-        String username = Username;
-        String password = Password;
+    String username = Username;
+    String password = Password;
 	Blob headerValue = Blob.valueOf(username +':'+password);
-        String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
-        request.setHeader('Authorization',authorizationHeader);
-        HttpResponse response = http.send(request);
+    String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
+    request.setHeader('Authorization',authorizationHeader);
+    HttpResponse response = http.send(request);
         // If the request is successful, parse the JSON response.
-        if (response.getStatusCode() == 200) {
-        	Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-    		List<Object> tickets = (List<Object>) results.get('result');
-    		System.debug('Received the following tickets:');
-    		for (Object ticket: tickets) {
-        		System.debug(ticket);
-    		}
+    if (response.getStatusCode() == 200) {
+        Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+    	List<Object> tickets = (List<Object>) results.get('result');
+    	System.debug('Received the following tickets:');
+    	for (Object ticket: tickets) {
+    		System.debug(ticket);
     	}
-        else{
-            System.debug(response.getStatusCode());
-        }
+    }
+    else{
+        System.debug(response.getStatusCode());
+    }
+	return response;
 
 	}
-    public void postTicket(String TableName,String incident,String UserName, String Password,String description){
-        	Http http = new Http();
+    public static HttpResponse postTicket(String TableName,String incident,String UserName, String Password,String description){
+        Http http = new Http();
 		HttpRequest request = new HttpRequest();
-	        String url = 'https://'+incident;
+	    String url = 'https://'+incident;
 		url = url + '.service-now.com/api/now/table/' + TableName;
 		request.setEndpoint(url);
 		request.setMethod('POST');
 		String username = Username;
-	        String password = Password;
+        String password = Password;
 		Blob headerValue = Blob.valueOf(username +':'+password);
 		String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
 		request.setHeader('Authorization',authorizationHeader);
@@ -42,11 +43,11 @@ public class ServiceNow {
 		request.setBody('{"description":"shubham crated this"}');
 		HttpResponse response = http.send(request);
 		if (response.getStatusCode() == 201) {
-    			System.debug('Succesfuly Created a ticket with description = ');
+    		System.debug('Succesfuly Created a ticket with description = ');
 		}
 		else{
-            		System.debug('Unable to Create a Ticket');
-    			System.debug(response.getStatusCode());
+    		System.debug('Unable to Create a Ticket');
+    		System.debug(response.getStatusCode());
 		}
     }
 }
