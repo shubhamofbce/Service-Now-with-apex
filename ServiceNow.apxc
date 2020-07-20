@@ -1,29 +1,29 @@
 public class ServiceNow {
     public static HttpResponse getTickets(String TableName,String incident,String UserName, String Password){
-    Http http = new Http();
-	HttpRequest request = new HttpRequest();
-    String url = 'https://'+incident;
-	url = url + '.service-now.com/api/now/table/' + TableName;
-	request.setEndpoint(url);
-	request.setMethod('GET');
-    String username = Username;
-    String password = Password;
-	Blob headerValue = Blob.valueOf(username +':'+password);
-    String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
-    request.setHeader('Authorization',authorizationHeader);
-    HttpResponse response = http.send(request);
+    	Http http = new Http();
+		HttpRequest request = new HttpRequest();
+    	String url = 'https://'+incident;
+		url = url + '.service-now.com/api/now/table/' + TableName;
+		request.setEndpoint(url);
+		request.setMethod('GET');
+    	String username = Username;
+    	String password = Password;
+		Blob headerValue = Blob.valueOf(username +':'+password);
+    	String authorizationHeader = 'Basic ' + EncodingUtil.base64Encode(headerValue);
+    	request.setHeader('Authorization',authorizationHeader);
+    	HttpResponse response = http.send(request);
         // If the request is successful, parse the JSON response.
-    if (response.getStatusCode() == 200) {
-        Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-    	List<Object> tickets = (List<Object>) results.get('result');
-    	System.debug('Received the following tickets:');
-    	for (Object ticket: tickets) {
-    		System.debug(ticket);
+    	if (response.getStatusCode() == 200) {
+        	Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+    		List<Object> tickets = (List<Object>) results.get('result');
+    		System.debug('Received the following tickets:');
+    		for (Object ticket: tickets) {
+    			System.debug(ticket);
+    		}
     	}
-    }
-    else{
-        System.debug(response.getStatusCode());
-    }
+    	else{
+        	System.debug(response.getStatusCode());
+    	}
 	return response;
 
 	}
@@ -49,5 +49,6 @@ public class ServiceNow {
     		System.debug('Unable to Create a Ticket');
     		System.debug(response.getStatusCode());
 		}
+		return response;
     }
 }
